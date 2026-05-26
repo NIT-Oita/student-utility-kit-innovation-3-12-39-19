@@ -1,7 +1,17 @@
 #include<stdio.h>
+#include <string.h>
 
+#define MAX_CARDS 10
+#define MAX_TEXT 100
+
+// ˆÃ‹LƒJ[ƒh\‘¢‘Ì
 typedef struct {
-	char one[128];//é¸æŠè‚¢1ï½
+    char question[MAX_TEXT];
+    char answer[MAX_TEXT];
+    int level; // ????x
+} FlashCard;
+typedef struct {
+	char one[128];//‘I‘ğˆ1`
 	char two[128];//2
 	char three[128];//3
 	char four[128];//4
@@ -9,7 +19,7 @@ typedef struct {
 	char six[128];//6
 	char seven[128];//7
 	char eight[128];//8
-	int element;//é¸æŠè‚¢ã®æ•°
+	int element;//‘I‘ğˆ‚Ì”
 }choosing;
 
 int choose(choosing choices)
@@ -17,20 +27,20 @@ int choose(choosing choices)
 	fflush(stdout);
  
 	int key;
-	int choice = 0;  // ç¾åœ¨ã®é¸æŠä½ç½®
+	int choice = 0;  // Œ»İ‚Ì‘I‘ğˆÊ’u
  
-	// æ–‡å­—åˆ—ãƒã‚¤ãƒ³ã‚¿ã®é…åˆ—ã‚’ä½œæˆï¼ˆé…åˆ—é•· = choices.elementï¼‰
+	// •¶š—ñƒ|ƒCƒ“ƒ^‚Ì”z—ñ‚ğì¬i”z—ñ’· = choices.elementj
 	char* items[8] = {
 		choices.one, choices.two, choices.three, choices.four,
 		choices.five, choices.six, choices.seven, choices.eight
 	};
  
-	int n = choices.element;  // é¸æŠè‚¢ã®æ•°
+	int n = choices.element;  // ‘I‘ğˆ‚Ì”
  
-	// æœ€åˆã®è¡¨ç¤º
+	// Å‰‚Ì•\¦
 	printf("\r");
 	for (int i = 0; i < n; i++) {
-		if (i == 0) printf("\x1b[33mãƒ»%s\x1b[0m   ", items[i]);
+		if (i == 0) printf("\x1b[33mE%s\x1b[0m   ", items[i]);
 		else        printf("%s   ", items[i]);
 	}
 	fflush(stdout);
@@ -43,17 +53,17 @@ int choose(choosing choices)
 			break;
 		}
  
-		// ç‰¹æ®Šã‚­ãƒ¼ï¼ˆçŸ¢å°ã‚­ãƒ¼ï¼‰
+		// “ÁêƒL[i–îˆóƒL[j
 		if (key == 0 || key == 224) {
 			key = _getch();
  
-			if (key == 75 && choice > 0) choice--;       // â†
-			else if (key == 77 && choice < n - 1) choice++; // â†’
+			if (key == 75 && choice > 0) choice--;       // ©
+			else if (key == 77 && choice < n - 1) choice++; // ¨
  
-			// å†æç”»
+			// Ä•`‰æ
 			printf("\r");
 			for (int i = 0; i < n; i++) {
-				if (i == choice) printf("\x1b[33mãƒ»%s\x1b[0m   ", items[i]);
+				if (i == choice) printf("\x1b[33mE%s\x1b[0m   ", items[i]);
 				else             printf("  %s   ", items[i]);
 			}
 			fflush(stdout);
@@ -63,9 +73,123 @@ int choose(choosing choices)
 	return choice;
 }
 
-int main(){
+int main() {
+    FlashCard cards[MAX_CARDS];
+    int count = 0;
+    int choice;
 
-    printf("1,start 2,add");
+    while (1) {
+        printf("\n=== ˆÃ‹LƒJ[ƒhƒAƒvƒŠ ===\n");
+        printf("‘I‘ğ‚µ‚Ä‚­‚¾‚³‚¢: ");
+
+        choice = choose((choosing){"ƒJ[ƒh’Ç‰Á", "ƒJ[ƒhˆê——", "ˆÃ‹LƒeƒXƒg", "I—¹", "", "", "", "", 4});
+
+        // -----------------------
+        // ƒJ[ƒh’Ç‰Á
+        // -----------------------
+        if (choice == 1) {
+
+            if (count >= MAX_CARDS) {
+                printf("‚±‚êˆÈã’Ç‰Á‚Å‚«‚Ü‚¹‚ñI\n");
+                continue;
+            }
+
+            printf("–â‘è: ");
+            fgets(cards[count].question, MAX_TEXT, stdin);
+            cards[count].question[strcspn(cards[count].question, "\n")] = '\0';
+
+            printf("“š‚¦: ");
+            fgets(cards[count].answer, MAX_TEXT, stdin);
+            cards[count].answer[strcspn(cards[count].answer, "\n")] = '\0';
+
+            cards[count].level = 0;
+
+            count++;
+
+            printf("ƒJ[ƒh‚ª’Ç‰Á‚³‚ê‚Ü‚µ‚½I\n");
+        }
+
+        // -----------------------
+        // ƒJ[ƒhˆê——
+        // -----------------------
+        else if (choice == 2) {
+
+            if (count == 0) {
+                printf("ƒJ[ƒh‚ª‚ ‚è‚Ü‚¹‚ñB\n");
+                continue;
+            }
+
+            printf("\n--- ƒJ[ƒhˆê—— ---\n");
+
+            for (int i = 0; i < count; i++) {
+                printf("%d. %s  [—‰ğ“x:%d]\n",
+                       i + 1,
+                       cards[i].question,
+                       cards[i].level);
+            }
+        }
+
+        // -----------------------
+        // ˆÃ‹LƒeƒXƒg
+        // -----------------------
+        else if (choice == 3) {
+
+            if (count == 0) {
+                printf("ƒJ[ƒh‚ª‚ ‚è‚Ü‚¹‚ñB\n");
+                continue;
+            }
+
+            char judge;
+
+            for (int i = 0; i < count; i++) {
+
+                printf("\n====================\n");
+                printf("–â‘è%d\n", i + 1);
+                printf("%s\n", cards[i].question);
+
+                printf("\nƒGƒ“ƒ^[‚ğ‰Ÿ‚µ‚Ä“š‚¦‚ğŒ©‚é...");
+                getchar();
+
+                printf("\n“š‚¦: %s\n", cards[i].answer);
+
+                printf("\n—‰ğ‚Å‚«‚½H\n");
+                printf("a: •ª‚©‚Á‚½\n");
+                printf("z: •ª‚©‚Á‚Ä‚È‚¢\n");
+                printf("“ü—Í: ");
+
+                scanf("%c", &judge);
+                getchar(); // ‰üsœ‹
+
+                if (judge == 'a') {
+                    cards[i].level++;
+                    printf("—‰ğ“xƒAƒbƒvI\n");
+                }
+                else if (judge == 'z') {
+
+                    if (cards[i].level > 0) {
+                        cards[i].level--;
+                    }
+
+                    printf("•œK‚µ‚æ‚¤I\n");
+                }
+                else {
+                    printf("–³Œø‚È“ü—Í‚Å‚·B\n");
+                }
+            }
+        }
+
+        // -----------------------
+        // I—¹
+        // -----------------------
+        else if (choice == 4) {
+            printf("I—¹‚µ‚Ü‚·I\n");
+            break;
+        }
+
+        else {
+            printf("–³Œø‚È“ü—Í‚Å‚·B\n");
+        }
+    }
 
     return 0;
 }

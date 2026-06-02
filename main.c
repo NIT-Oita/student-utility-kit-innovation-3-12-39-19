@@ -317,7 +317,7 @@ void create_deck(void) {
 void add_cards_to_deck(Deck *d) {
     print_header("  カード追加");
     printf(C_CYAN "  デッキ: %s\n" C_RESET, d->name);
-    printf(C_DIM "  (表・裏を入力してください。空Enterで終了)\n\n" C_RESET);
+    printf(C_DIM "  (オモテ・ウラを入力してください。空Enterで終了)\n\n" C_RESET);
 
     int added = 0;
     while (1) {
@@ -326,12 +326,12 @@ void add_cards_to_deck(Deck *d) {
             break;
         }
         printf(C_YELLOW "  カード %d\n" C_RESET, added + 1);
-        printf("    表（問題）: ");
+        printf("    オモテ(問題）: ");
         char front[MAX_STR], back[MAX_STR];
         read_line(front, sizeof(front));
         if (strlen(front) == 0) break;
 
-        printf("    裏（答え）: ");
+        printf("    ウラ（答え）: ");
         read_line(back, sizeof(back));
         if (strlen(back) == 0) break;
 
@@ -378,7 +378,7 @@ void edit_cards(Deck *d) {
         for (int i = 0; i < d->card_count; i++) {
             Card *c = find_card(d->card_ids[i]);
             if (!c) continue;
-            printf("  " C_BOLD "[%d]" C_RESET " 表: %-28s  裏: %s\n",
+            printf("  " C_BOLD "[%d]" C_RESET " オモテ: %-28s  ウラ: %s\n",
                         i + 1, c->front, c->back);
         }
 
@@ -432,14 +432,14 @@ void edit_cards(Deck *d) {
         Card *c = find_card(d->card_ids[idx]);
         if (!c) continue;
 
-        printf("\n  現在の表: %s\n", c->front);
-        printf("  新しい表 (空=変更なし): ");
+        printf("\n  現在のオモテ: %s\n", c->front);
+        printf("  新しいオモテ (空=変更なし): ");
         char buf[MAX_STR];
         read_line(buf, sizeof(buf));
         if (strlen(buf) > 0) strncpy(c->front, buf, MAX_STR - 1);
 
-        printf("  現在の裏: %s\n", c->back);
-        printf("  新しい裏 (空=変更なし): ");
+        printf("  現在のウラ: %s\n", c->back);
+        printf("  新しいウラ (空=変更なし): ");
         read_line(buf, sizeof(buf));
         if (strlen(buf) > 0) strncpy(c->back, buf, MAX_STR - 1);
 

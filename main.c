@@ -3,7 +3,7 @@
  * Spaced repetition with the SM-2 algorithm
  */
 
-#include "anki.c"
+#include "UI.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

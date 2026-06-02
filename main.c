@@ -5,6 +5,7 @@
  * ????????????????????????????????????????????
  */
 
+#include "anki.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -325,7 +326,7 @@ void add_cards_to_deck(Deck *d) {
             break;
         }
         printf(C_YELLOW "  カード %d\n" C_RESET, added + 1);
-        printf("   　表（問題）: ");
+        printf("    表（問題）: ");
         char front[MAX_STR], back[MAX_STR];
         read_line(front, sizeof(front));
         if (strlen(front) == 0) break;
@@ -396,9 +397,10 @@ void edit_cards(Deck *d) {
                 press_enter(NULL);
                 continue;
             }
-            printf(C_RED "  本当に削除しますか？ [y/N]: " C_RESET);
-            char yn[8]; read_line(yn, sizeof(yn));
-            if (yn[0] == 'y' || yn[0] == 'Y') {
+            printf(C_RED "  本当に削除しますか？\n" C_RESET);
+            int yn = choose((choosing){"Yes","No","","","","","","",2});
+            if (yn == 0 ) 
+            {
                 /* カードIDをゼロクリア（簡易削除） */
                 int rem_id = d->card_ids[idx];
                 for (int i = idx; i < d->card_count - 1; i++)
@@ -722,18 +724,12 @@ void deck_menu(Deck *d) {
         if (due > 0)
             printf("  " C_YELLOW "? 今日の復習: %d 枚" C_RESET "\n\n", due);
 
-        printf("  [1] 勉強開始\n");
-        printf("  [2] カードを追加\n");
-        printf("  [3] カードを編集・削除\n");
-        printf("  [0] 戻る\n\n");
-        printf("  > ");
-
-        int ch = read_int();
+        int ch = choose((choosing){"勉強開始","カードを追加","カードを編集・削除","戻る","","","","",4});
         switch (ch) {
-            case 1: study_session(d); break;
-            case 2: clear_screen(); add_cards_to_deck(d); break;
-            case 3: clear_screen(); edit_cards(d); break;
-            case 0: return;
+            case 0: study_session(d); break;
+            case 1: clear_screen(); add_cards_to_deck(d); break;
+            case 2: clear_screen(); edit_cards(d); break;
+            case 3: return;
             default:
                 printf(C_RED "  無効な選択です。\n" C_RESET);
                 press_enter(NULL);
@@ -767,25 +763,19 @@ void main_menu(void) {
 
         show_deck_list();
 
-        printf("  [1] デッキを選択して勉強\n");
-        printf("  [2] 新しいデッキを作成\n");
-        printf("  [3] 学習統計を見る\n");
-        printf("  [0] 終了\n\n");
-        printf("  > ");
+        int ch = choose((choosing){"デッキを選択して勉強","新しいデッキを作成","学習統計を見る","終了","","","","",4});
 
-        int ch = read_int();
-
-        if (ch == 0) {
+        if (ch == 3) {
             clear_screen();
-            printf(C_CYAN "\n  お疲れ様でした！また明日も頑張りましょう！?\n\n" C_RESET);
+            printf(C_CYAN "\n  お疲れ様でした！また明日も頑張りましょう！\n\n" C_RESET);
             break;
-        } else if (ch == 2) {
+        } else if (ch == 1) {
             clear_screen();
             create_deck();
-        } else if (ch == 3) {
+        } else if (ch == 2) {
             clear_screen();
             show_stats();
-        } else if (ch == 1) {
+        } else if (ch == 0) {
             if (g.deck_count == 0) {
                 printf(C_RED "  デッキがありません。先にデッキを作成してください。\n" C_RESET);
                 press_enter(NULL);

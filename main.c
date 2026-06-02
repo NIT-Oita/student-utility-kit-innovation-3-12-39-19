@@ -9,6 +9,11 @@
 #include <time.h>
 #include <math.h>
 
+/* Windows: set console to Shift-JIS (CP932) for Japanese I/O */
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 /* „Ÿ„Ÿ Constants „Ÿ„Ÿ */
 #define MAX_DECKS     50
 #define MAX_CARDS     500
@@ -74,11 +79,12 @@ void press_enter(void) {
     while ((ch = getchar()) != '\n' && ch != EOF);
 }
 
-/* Read one line; strip trailing newline */
+/* Read one line; strip trailing \n and \r (handles Windows CRLF) */
 void read_line(char *buf, int maxlen) {
     if (!fgets(buf, maxlen, stdin)) { buf[0] = '\0'; return; }
     size_t len = strlen(buf);
-    if (len > 0 && buf[len - 1] == '\n') buf[len - 1] = '\0';
+    while (len > 0 && (buf[len - 1] == '\n' || buf[len - 1] == '\r'))
+        buf[--len] = '\0';
 }
 
 int read_int(void) {
@@ -495,7 +501,8 @@ void study_session(Deck *d) {
     printf("  Correct     : %d\n",   session_correct);
     printf("  Wrong       : %d\n",   session_wrong);
     printf("  Total tries : %d\n",   session_total);
-    printf("  Time        : %d min %02d sec\n",(int)elapsed / 60, (int)elapsed % 60);
+    printf("  Time        : %d min %02d sec\n",
+            (int)elapsed / 60, (int)elapsed % 60);
     if (session_total > 0)
         printf("  Accuracy    : %.1f%%\n",
                (double)session_correct / d->card_count * 100.0);
@@ -686,6 +693,11 @@ Entry point
 ?????????????????????????????????????????? */
 
 int main(void) {
+#ifdef _WIN32
+    /* Use Shift-JIS (CP932) for both input and output on Windows */
+    SetConsoleCP(932);
+    SetConsoleOutputCP(932);
+#endif
     srand((unsigned int)time(NULL));
     if (!load_data()) init_data();
     main_menu();

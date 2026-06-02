@@ -1,5 +1,6 @@
-#include<stdio.h>
+#include <stdio.h>
 #include <string.h>
+#include <conio.h>
 
 #define MAX_CARDS 10
 #define MAX_TEXT 100
@@ -83,7 +84,7 @@ int main() {
         printf("選択してください: ");
 
         choice = choose((choosing){"カード追加", "カード一覧", "暗記テスト", "終了", "", "", "", "", 4});
-
+        choice++;
         // -----------------------
         // カード追加
         // -----------------------

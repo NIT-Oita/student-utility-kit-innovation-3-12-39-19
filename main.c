@@ -1,5 +1,5 @@
 /*
- * FlashMaster - Flashcard Study App
+ * Anking - Flashcard Study App
  * Spaced repetition with the SM-2 algorithm
  */
 
@@ -191,7 +191,7 @@ UI: title / header
 ?????????????????????????????????????????? */
 
 void print_title(void) {
-    puts("\n  FlashMaster - Spaced Repetition Study App");
+    puts("\n  Anking - Spaced Repetition Study App");
     puts("  Learn efficiently with the SM-2 algorithm");
     sep();
 }
